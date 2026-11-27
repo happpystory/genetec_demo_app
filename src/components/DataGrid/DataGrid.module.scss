@@ -20,3 +20,8 @@
 .bodyCell {
   padding: $spacing-sm $spacing-md;
 }
+
+.pagination {
+  padding: $spacing-md;
+  border-top: 1px solid $color-border;
+}

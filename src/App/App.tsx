@@ -53,7 +53,7 @@ function App() {
             </IfxButton>
 
             <div className={styles.gridSection}>
-              <DataGrid columns={eventColumns} rows={events.slice(0, 20)} getRowId={getEventId} />
+              <DataGrid columns={eventColumns} rows={events} getRowId={getEventId} />
             </div>
           </div>
 
