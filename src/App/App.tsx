@@ -4,10 +4,11 @@ import { useEvents } from '../features/events/hooks/useEvents';
 import { DataGrid } from '../components/DataGrid';
 import type { DataGridColumn } from '../components/DataGrid';
 import type { ScheduleEvent } from '../features/events/types/event.types';
+import { formatEventStart } from '../features/events/utils/event.utils';
 
 const eventColumns: DataGridColumn<ScheduleEvent>[] = [
   { label: 'Title', accessor: 'title' },
-  { label: 'Start', accessor: 'start' },
+  { label: 'Start', accessor: 'start', renderCell: formatEventStart },
   { label: 'Duration', accessor: 'durationMin' },
   { label: 'Category', accessor: 'category' },
   { label: 'Location', accessor: 'location' },

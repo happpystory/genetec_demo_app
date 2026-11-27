@@ -15,3 +15,9 @@ export interface SortState<RowType> {
   accessor: keyof RowType;
   direction: SortDirection;
 }
+
+export interface DataGridColumn<RowType> {
+  label: string;
+  accessor: keyof RowType;
+  renderCell?: (row: RowType) => string;
+}

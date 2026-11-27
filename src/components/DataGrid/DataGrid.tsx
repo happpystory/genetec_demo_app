@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { IfxPagination } from '@infineon/design-system-react';
 import styles from './DataGrid.module.scss';
-import type { DataGridProps, SortState } from './DataGrid.types';
+import type { DataGridColumn, DataGridProps, SortState } from './DataGrid.types';
 import { sortRows } from './DataGrid.utils';
 
 const DEFAULT_PAGE_SIZE = 25;
@@ -61,6 +61,13 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
     setCurrentPage(1);
   };
 
+  const getCellContent = (row: RowType, column: DataGridColumn<RowType>) => {
+  if (column.renderCell !== undefined) {
+    return column.renderCell(row);
+  }
+    return String(row[column.accessor]);
+  };
+
   return (
     <div>
       <table className={styles.table}>
@@ -96,7 +103,7 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
             <tr key={getRowId(row)} className={styles.bodyRow}>
               {columns.map((column) => (
                 <td key={String(column.accessor)} className={styles.bodyCell}>
-                  {String(row[column.accessor])}
+                  {getCellContent(row, column)}
                 </td>
               ))}
             </tr>
