@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   IfxButton,
+  IfxCheckbox,
+  IfxCheckboxGroup,
   IfxPagination,
   IfxSpinner,
   IfxTextField,
@@ -30,6 +32,9 @@ export const DataGrid = <RowType,>({
   const [sortState, setSortState] = useState<SortState<RowType> | null>(null);
   const [filterInputValues, setFilterInputValues] = useState<FilterValues>({});
   const [filterValues, setFilterValues] = useState<FilterValues>({});
+  const [hiddenColumnKeys, setHiddenColumnKeys] = useState<string[]>(
+  columns.filter((column) => column.isHidden === true).map((column) => String(column.accessor)),
+);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -40,24 +45,26 @@ export const DataGrid = <RowType,>({
     return () => clearTimeout(timeoutId);
   }, [filterInputValues]);
 
+  const visibleColumns = useMemo(() => {
+    return columns.filter((column) => !hiddenColumnKeys.includes(String(column.accessor)));
+  }, [columns, hiddenColumnKeys]);
+
   const filteredRows = useMemo(() => {
-    return filterRows(rows, columns, filterValues);
-  }, [rows, columns, filterValues]);
+    return filterRows(rows, visibleColumns, filterValues);
+  }, [rows, visibleColumns, filterValues]);
 
   const sortedRows = useMemo(() => {
     if (sortState === null) {
       return filteredRows;
     }
 
-    const sortedColumn = columns.find(
-      (column) => column.accessor === sortState.accessor,
-    );
+    const sortedColumn = visibleColumns.find((column) => column.accessor === sortState.accessor);
     if (sortedColumn === undefined) {
       return filteredRows;
     }
 
     return sortRows(filteredRows, sortedColumn, sortState.direction);
-  }, [filteredRows, columns, sortState]);
+  }, [filteredRows, visibleColumns, sortState]);
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -68,6 +75,16 @@ export const DataGrid = <RowType,>({
       return sortState.direction;
     }
     return "none";
+  };
+
+  const handleColumnToggle = (accessor: keyof RowType) => {
+    const columnKey = String(accessor);
+
+    if (hiddenColumnKeys.includes(columnKey)) {
+      setHiddenColumnKeys(hiddenColumnKeys.filter((hiddenKey) => hiddenKey !== columnKey));
+    } else {
+      setHiddenColumnKeys([...hiddenColumnKeys, columnKey]);
+    }
   };
 
   const handleHeaderClick = (accessor: keyof RowType) => {
@@ -93,13 +110,28 @@ export const DataGrid = <RowType,>({
     setPageSize(Number(event.detail));
     setCurrentPage(1);
   };
+  
 
   return (
     <div>
+      <div className={styles.columnToggles}>
+        <IfxCheckboxGroup alignment="horizontal" groupLabelText="Columns" showGroupLabel={true}>
+          {columns.map((column) => (
+            <IfxCheckbox
+              key={String(column.accessor)}
+              size="s"
+              checked={!hiddenColumnKeys.includes(String(column.accessor))}
+              onIfxChange={() => handleColumnToggle(column.accessor)}
+            >
+              {column.label}
+            </IfxCheckbox>
+          ))}
+        </IfxCheckboxGroup>
+      </div>
       <table className={styles.table}>
         <thead>
           <tr>
-            {columns.map((column) => {
+            {visibleColumns.map((column) => {
               const sortDirection = getSortDirection(column.accessor);
 
               return (
@@ -123,7 +155,7 @@ export const DataGrid = <RowType,>({
             })}
           </tr>
           <tr>
-            {columns.map((column) => (
+            {visibleColumns.map((column) => (
               <th key={String(column.accessor)} className={styles.filterCell}>
                 <IfxTextField
                   size="s"
@@ -142,7 +174,7 @@ export const DataGrid = <RowType,>({
         <tbody>
         {status === 'loading' && (
           <tr>
-            <td colSpan={columns.length} className={styles.stateCell}>
+            <td colSpan={visibleColumns.length} className={styles.stateCell}>
               <IfxSpinner size="m" />
               <p className={styles.stateText}>Loading...</p>
             </td>
@@ -151,7 +183,7 @@ export const DataGrid = <RowType,>({
 
           {status === "error" && (
             <tr>
-              <td colSpan={columns.length} className={styles.stateCell}>
+              <td colSpan={visibleColumns.length} className={styles.stateCell}>
                 <p className={styles.stateText}>Could not load the data.</p>
                 <IfxButton type="button" onClick={onRetry}>
                   Retry
@@ -162,7 +194,7 @@ export const DataGrid = <RowType,>({
 
           {status === "ready" && filteredRows.length === 0 && (
             <tr>
-              <td colSpan={columns.length} className={styles.stateCell}>
+              <td colSpan={visibleColumns.length} className={styles.stateCell}>
                 <p className={styles.stateText}>No results found.</p>
               </td>
             </tr>
@@ -171,7 +203,7 @@ export const DataGrid = <RowType,>({
           {status === "ready" &&
             visibleRows.map((row) => (
               <tr key={getRowId(row)} className={styles.bodyRow}>
-                {columns.map((column) => (
+                {visibleColumns.map((column) => (
                   <td key={String(column.accessor)} className={styles.bodyCell}>
                     {getCellText(row, column)}
                   </td>

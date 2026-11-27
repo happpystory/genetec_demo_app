@@ -20,6 +20,7 @@ export interface DataGridColumn<RowType> {
   label: string;
   accessor: keyof RowType;
   renderCell?: (row: RowType) => string;
+  isHidden?: boolean;
 }
 
 export interface FilterValues {

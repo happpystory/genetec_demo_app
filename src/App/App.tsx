@@ -56,9 +56,12 @@ function App() {
               {status === "ready" &&
                 ` · ${events.length.toLocaleString()} events`}
             </p>
-            <IfxButton type="button" onClick={handleSimulateErrorClick}>
-              Simulate error
-            </IfxButton>
+            
+            <div className={styles.debugActions}>
+              <IfxButton type="button" onClick={handleSimulateErrorClick}>
+                Simulate error
+              </IfxButton>
+            </div>
 
             <div className={styles.gridSection}>
               <DataGrid

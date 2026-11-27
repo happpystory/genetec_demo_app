@@ -28,7 +28,7 @@
 }
 
 .bodyCell {
-  padding: $spacing-sm $spacing-md;
+  padding: 12px $spacing-md;
 }
 
 .pagination {
@@ -37,7 +37,7 @@
 }
 
 .filterCell {
-  padding: 0 $spacing-md $spacing-sm;
+  padding: $spacing-sm $spacing-md $spacing-sm;
   border-bottom: 1px solid $color-border;
 }
 
@@ -56,4 +56,19 @@
 
 .stateText {
   margin: $spacing-sm 0;
+}
+
+.columnToggles {
+  padding: $spacing-md;
+  border-bottom: 1px solid $color-border;
+}
+
+.columnTogglesLabel {
+  font-weight: 600;
+}
+
+.columnToggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
 }
