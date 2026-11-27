@@ -1,9 +1,23 @@
 import styles from './App.module.scss';
 import { IfxButton } from '@infineon/design-system-react';
 import { useEvents } from '../features/events/hooks/useEvents';
+import { DataGrid } from '../components/DataGrid';
+import type { DataGridColumn } from '../components/DataGrid';
+import type { ScheduleEvent } from '../features/events/types/event.types';
+
+const eventColumns: DataGridColumn<ScheduleEvent>[] = [
+  { label: 'Title', accessor: 'title' },
+  { label: 'Start', accessor: 'start' },
+  { label: 'Duration', accessor: 'durationMin' },
+  { label: 'Category', accessor: 'category' },
+  { label: 'Location', accessor: 'location' },
+  { label: 'Organizer', accessor: 'organizer' },
+];
 
 function App() {
   const { events, status, reload } = useEvents();
+
+  const getEventId = (event: ScheduleEvent) => event.id;
 
   const handleSimulateErrorClick = () => {
     reload({ simulateError: true });
@@ -29,9 +43,7 @@ function App() {
         </div>
 
         <section className={styles.content}>
-          <div className={styles.sectionPlaceholder}>
-            DataGrid here
-            {/* temporary added for testing purposes. will remove when I add the table */}
+          <div className={styles.gridColumn}>
             <p className={styles.debugInfo}>
               Status: {status}
               {status === 'ready' && ` · ${events.length.toLocaleString()} events`}
@@ -39,6 +51,10 @@ function App() {
             <IfxButton type="button" onClick={handleSimulateErrorClick}>
               Simulate error
             </IfxButton>
+
+            <div className={styles.gridSection}>
+              <DataGrid columns={eventColumns} rows={events.slice(0, 20)} getRowId={getEventId} />
+            </div>
           </div>
 
           <div className={styles.sectionPlaceholder}>Timeline here</div>

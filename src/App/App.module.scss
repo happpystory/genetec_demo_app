@@ -74,6 +74,17 @@
   margin: $spacing-md 0;
 }
 
+.gridSection {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+  overflow-x: auto;
+}
+
+.gridColumn {
+  min-width: 0;
+}
+
 @media (max-width: 900px) {
   .content {
     grid-template-columns: 1fr;

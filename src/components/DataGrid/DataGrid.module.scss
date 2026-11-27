@@ -1,0 +1,22 @@
+@use '../../styles/variables' as *;
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $color-surface;
+}
+
+.headerCell {
+  padding: $spacing-sm $spacing-md;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid $color-border;
+}
+
+.bodyRow {
+  border-bottom: 1px solid $color-border;
+}
+
+.bodyCell {
+  padding: $spacing-sm $spacing-md;
+}
