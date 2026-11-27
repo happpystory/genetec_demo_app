@@ -8,3 +8,10 @@ export interface DataGridProps<RowType> {
   rows: RowType[];
   getRowId: (row: RowType) => string;
 }
+
+export type SortDirection = 'ascending' | 'descending';
+
+export interface SortState<RowType> {
+  accessor: keyof RowType;
+  direction: SortDirection;
+}
