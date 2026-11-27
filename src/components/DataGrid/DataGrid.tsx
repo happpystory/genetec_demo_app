@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react';
-import { IfxPagination } from '@infineon/design-system-react';
+import { useEffect, useMemo, useState } from 'react';
+import { IfxPagination, IfxTextField } from '@infineon/design-system-react';
 import styles from './DataGrid.module.scss';
-import type { DataGridColumn, DataGridProps, SortState } from './DataGrid.types';
-import { sortRows } from './DataGrid.utils';
+import type { DataGridProps, FilterValues, SortState } from './DataGrid.types';
+import { filterRows, getCellText, sortRows } from './DataGrid.utils';
 
 const DEFAULT_PAGE_SIZE = 25;
+const FILTER_DELAY_IN_MILLISECONDS = 300;
 
 const ITEMS_PER_PAGE_OPTIONS = JSON.stringify([
   { value: '10', selected: false },
@@ -16,19 +17,34 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [sortState, setSortState] = useState<SortState<RowType> | null>(null);
+  const [filterInputValues, setFilterInputValues] = useState<FilterValues>({});
+  const [filterValues, setFilterValues] = useState<FilterValues>({});
+
+  useEffect(() => {
+  const timeoutId = setTimeout(() => {
+    setFilterValues(filterInputValues);
+    setCurrentPage(1);
+  }, FILTER_DELAY_IN_MILLISECONDS);
+
+  return () => clearTimeout(timeoutId);
+}, [filterInputValues]);
+
+  const filteredRows = useMemo(() => {
+    return filterRows(rows, columns, filterValues);
+  }, [rows, columns, filterValues]);
 
   const sortedRows = useMemo(() => {
     if (sortState === null) {
-      return rows;
+      return filteredRows;
     }
 
     const sortedColumn = columns.find((column) => column.accessor === sortState.accessor);
     if (sortedColumn === undefined) {
-      return rows;
+      return filteredRows;
     }
 
-    return sortRows(rows, sortedColumn, sortState.direction);
-  }, [rows, columns, sortState]);
+    return sortRows(filteredRows, sortedColumn, sortState.direction);
+  }, [filteredRows, columns, sortState]);
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -52,6 +68,10 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
     setCurrentPage(1);
   };
 
+  const handleFilterChange = (accessor: keyof RowType, value: string) => {
+    setFilterInputValues({ ...filterInputValues, [String(accessor)]: value });
+  };
+
   const handlePageChange = (event: CustomEvent) => {
     setCurrentPage(event.detail.currentPage);
   };
@@ -59,13 +79,6 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
   const handleItemsPerPageChange = (event: CustomEvent) => {
     setPageSize(Number(event.detail));
     setCurrentPage(1);
-  };
-
-  const getCellContent = (row: RowType, column: DataGridColumn<RowType>) => {
-  if (column.renderCell !== undefined) {
-    return column.renderCell(row);
-  }
-    return String(row[column.accessor]);
   };
 
   return (
@@ -96,6 +109,19 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
               );
             })}
           </tr>
+          <tr>
+            {columns.map((column) => (
+              <th key={String(column.accessor)} className={styles.filterCell}>
+              <IfxTextField
+                size="s"
+                showDeleteIcon={true}
+                ariaLabel={`Filter ${column.label}`}
+                value={filterInputValues[String(column.accessor)] ?? ''}
+                onIfxInput={(event: CustomEvent) => handleFilterChange(column.accessor, event.detail)}
+              />
+              </th>
+            ))}
+          </tr>
         </thead>
 
         <tbody>
@@ -103,7 +129,7 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
             <tr key={getRowId(row)} className={styles.bodyRow}>
               {columns.map((column) => (
                 <td key={String(column.accessor)} className={styles.bodyCell}>
-                  {getCellContent(row, column)}
+                  {getCellText(row, column)}
                 </td>
               ))}
             </tr>
@@ -113,7 +139,7 @@ export const DataGrid = <RowType,>({ columns, rows, getRowId }: DataGridProps<Ro
 
       <div className={styles.pagination}>
         <IfxPagination
-          total={rows.length}
+          total={filteredRows.length}
           currentPage={currentPage}
           itemsPerPage={ITEMS_PER_PAGE_OPTIONS}
           onIfxPageChange={handlePageChange}

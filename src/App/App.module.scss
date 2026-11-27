@@ -11,10 +11,9 @@
 }
 
 .headerContent {
-  max-width: 1440px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 $spacing-xl;
+  padding: 0 $spacing-md;
   display: flex;
   align-items: center;
   gap: $spacing-md;
@@ -33,9 +32,8 @@
 }
 
 .main {
-  max-width: 1440px;
   margin: 0 auto;
-  padding: $spacing-xl;
+  padding: $spacing-md;
 }
 
 .pageHeader {
@@ -57,7 +55,7 @@
 
 .content {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1fr) 260px;
   gap: $spacing-lg;
 }
 

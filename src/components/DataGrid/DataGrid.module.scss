@@ -35,3 +35,15 @@
   padding: $spacing-md;
   border-top: 1px solid $color-border;
 }
+
+.filterCell {
+  padding: 0 $spacing-md $spacing-sm;
+  border-bottom: 1px solid $color-border;
+}
+
+.filterInput {
+  width: 100%;
+  padding: $spacing-xs $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-sm;
+}

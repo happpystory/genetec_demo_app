@@ -21,3 +21,7 @@ export interface DataGridColumn<RowType> {
   accessor: keyof RowType;
   renderCell?: (row: RowType) => string;
 }
+
+export interface FilterValues {
+  [accessor: string]: string;
+}
