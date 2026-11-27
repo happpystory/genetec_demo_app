@@ -25,3 +25,13 @@ export interface DataGridColumn<RowType> {
 export interface FilterValues {
   [accessor: string]: string;
 }
+
+export type DataGridStatus = 'loading' | 'ready' | 'error';
+
+export interface DataGridProps<RowType> {
+  columns: DataGridColumn<RowType>[];
+  rows: RowType[];
+  getRowId: (row: RowType) => string;
+  status: DataGridStatus;
+  onRetry: () => void;
+}

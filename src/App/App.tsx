@@ -1,18 +1,18 @@
-import styles from './App.module.scss';
-import { IfxButton } from '@infineon/design-system-react';
-import { useEvents } from '../features/events/hooks/useEvents';
-import { DataGrid } from '../components/DataGrid';
-import type { DataGridColumn } from '../components/DataGrid';
-import type { ScheduleEvent } from '../features/events/types/event.types';
-import { formatEventStart } from '../features/events/utils/event.utils';
+import styles from "./App.module.scss";
+import { IfxButton } from "@infineon/design-system-react";
+import { useEvents } from "../features/events/hooks/useEvents";
+import { DataGrid } from "../components/DataGrid";
+import type { DataGridColumn } from "../components/DataGrid";
+import type { ScheduleEvent } from "../features/events/types/event.types";
+import { formatEventStart } from "../features/events/utils/event.utils";
 
 const eventColumns: DataGridColumn<ScheduleEvent>[] = [
-  { label: 'Title', accessor: 'title' },
-  { label: 'Start', accessor: 'start', renderCell: formatEventStart },
-  { label: 'Duration', accessor: 'durationMin' },
-  { label: 'Category', accessor: 'category' },
-  { label: 'Location', accessor: 'location' },
-  { label: 'Organizer', accessor: 'organizer' },
+  { label: "Title", accessor: "title" },
+  { label: "Start", accessor: "start", renderCell: formatEventStart },
+  { label: "Duration", accessor: "durationMin" },
+  { label: "Category", accessor: "category" },
+  { label: "Location", accessor: "location" },
+  { label: "Organizer", accessor: "organizer" },
 ];
 
 function App() {
@@ -22,6 +22,10 @@ function App() {
 
   const handleSimulateErrorClick = () => {
     reload({ simulateError: true });
+  };
+
+  const handleRetry = () => {
+    reload();
   };
 
   return (
@@ -37,7 +41,9 @@ function App() {
         <div className={styles.pageHeader}>
           <div className={styles.pageHeading}>
             <h1 className={styles.pageTitle}>Event Management</h1>
-            <p className={styles.pageSubtitle}>View and manage scheduled events.</p>
+            <p className={styles.pageSubtitle}>
+              View and manage scheduled events.
+            </p>
           </div>
 
           <IfxButton type="button">+ New event</IfxButton>
@@ -47,14 +53,21 @@ function App() {
           <div className={styles.gridColumn}>
             <p className={styles.debugInfo}>
               Status: {status}
-              {status === 'ready' && ` · ${events.length.toLocaleString()} events`}
+              {status === "ready" &&
+                ` · ${events.length.toLocaleString()} events`}
             </p>
             <IfxButton type="button" onClick={handleSimulateErrorClick}>
               Simulate error
             </IfxButton>
 
             <div className={styles.gridSection}>
-              <DataGrid columns={eventColumns} rows={events} getRowId={getEventId} />
+              <DataGrid
+              columns={eventColumns}
+              rows={events}
+              getRowId={getEventId}
+              status={status}
+              onRetry={handleRetry}
+            />
             </div>
           </div>
 
