@@ -57,3 +57,29 @@ export const flattenGroups = <ItemType>(groups: TimelineGroup<ItemType>[]): Time
 
   return rows;
 };
+
+export const findNextHeaderIndex = <ItemType>(
+  rows: TimelineRow<ItemType>[],
+  activeRowIndex: number,
+): number => {
+  for (let rowIndex = activeRowIndex + 1; rowIndex < rows.length; rowIndex++) {
+    if (rows[rowIndex].type === 'header') {
+      return rowIndex;
+    }
+  }
+
+  return activeRowIndex;
+};
+
+export const findPreviousHeaderIndex = <ItemType>(
+  rows: TimelineRow<ItemType>[],
+  activeRowIndex: number,
+): number => {
+  for (let rowIndex = activeRowIndex - 1; rowIndex >= 0; rowIndex--) {
+    if (rows[rowIndex].type === 'header') {
+      return rowIndex;
+    }
+  }
+
+  return activeRowIndex;
+};

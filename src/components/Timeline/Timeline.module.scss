@@ -6,6 +6,11 @@
   overflow-y: auto;
 }
 
+.timeline:focus .activeRow {
+  background: $color-background;
+  box-shadow: inset 3px 0 0 $color-primary;
+}
+
 .rowsContainer {
   position: relative;
   width: 100%;
@@ -29,3 +34,4 @@
 .item {
   padding: 0;
 }
+
