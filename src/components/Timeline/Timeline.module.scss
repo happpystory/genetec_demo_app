@@ -1,0 +1,27 @@
+@use '../../styles/variables' as *;
+
+.timeline {
+  max-height: inherit;
+  padding: $spacing-md;
+  overflow-y: auto;
+}
+
+.group {
+  margin-bottom: $spacing-lg;
+}
+
+.groupTitle {
+  margin-bottom: $spacing-sm;
+  padding-bottom: $spacing-xs;
+  border-bottom: 1px solid $color-border;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.itemList {
+  list-style: none;
+}
+
+.item {
+  padding: $spacing-sm 0;
+}

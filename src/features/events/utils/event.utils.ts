@@ -12,3 +12,13 @@ export const formatEventStart = (event: ScheduleEvent): string => {
   const startDate = new Date(event.start);
   return startDateFormatter.format(startDate);
 };
+
+const startTimeFormatter = new Intl.DateTimeFormat('en-GB', {
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+export const formatEventTime = (event: ScheduleEvent): string => {
+  const startDate = new Date(event.start);
+  return startTimeFormatter.format(startDate);
+};

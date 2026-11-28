@@ -4,7 +4,8 @@ import { useEvents } from "../features/events/hooks/useEvents";
 import { DataGrid } from "../components/DataGrid";
 import type { DataGridColumn } from "../components/DataGrid";
 import type { ScheduleEvent } from "../features/events/types/event.types";
-import { formatEventStart } from "../features/events/utils/event.utils";
+import { formatEventStart, formatEventTime } from "../features/events/utils/event.utils";
+import { Timeline } from "../components/Timeline";
 
 const eventColumns: DataGridColumn<ScheduleEvent>[] = [
   { label: "Title", accessor: "title" },
@@ -15,10 +16,19 @@ const eventColumns: DataGridColumn<ScheduleEvent>[] = [
   { label: "Organizer", accessor: "organizer" },
 ];
 
+const getEventDate = (event: ScheduleEvent) => event.start;
+
 function App() {
   const { events, status, reload } = useEvents();
 
   const getEventId = (event: ScheduleEvent) => event.id;
+
+  const renderEventItem = (event: ScheduleEvent) => (
+    <>
+      <span className={styles.eventTime}>{formatEventTime(event)}</span>
+      <span className={styles.eventTitle}>{event.title}</span>
+    </>
+  );
 
   const handleSimulateErrorClick = () => {
     reload({ simulateError: true });
@@ -74,7 +84,14 @@ function App() {
             </div>
           </div>
 
-          <div className={styles.sectionPlaceholder}>Timeline here</div>
+          <div className={styles.timelineSection}>
+            <Timeline
+              items={events.slice(0, 100)}
+              getItemId={getEventId}
+              getItemDate={getEventDate}
+              renderItem={renderEventItem}
+            />
+          </div>
         </section>
       </main>
     </div>

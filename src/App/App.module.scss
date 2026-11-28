@@ -86,9 +86,33 @@
   min-width: 0;
 }
 
+.timelineSection {
+  position: sticky;
+  top: $spacing-md;
+  align-self: start;
+  max-height: calc(100vh - #{$spacing-xl});
+  overflow: hidden;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+}
+
+.eventTime {
+  margin-right: $spacing-sm;
+  font-weight: 600;
+}
+
+.eventTitle {
+  color: $color-text-secondary;
+}
+
 @media (max-width: 900px) {
   .content {
     grid-template-columns: 1fr;
+  }
+
+  .timelineSection {
+    position: static;
   }
 }
 
