@@ -86,8 +86,7 @@ function App() {
 
           <div className={styles.timelineSection}>
             <Timeline
-              items={events.slice(0, 100)}
-              getItemId={getEventId}
+              items={events}
               getItemDate={getEventDate}
               renderItem={renderEventItem}
             />

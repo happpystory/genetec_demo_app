@@ -6,22 +6,26 @@
   overflow-y: auto;
 }
 
-.group {
-  margin-bottom: $spacing-lg;
+.rowsContainer {
+  position: relative;
+  width: 100%;
+}
+
+.row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .groupTitle {
-  margin-bottom: $spacing-sm;
-  padding-bottom: $spacing-xs;
   border-bottom: 1px solid $color-border;
   font-size: 14px;
   font-weight: 600;
 }
 
-.itemList {
-  list-style: none;
-}
-
 .item {
-  padding: $spacing-sm 0;
+  padding: 0;
 }

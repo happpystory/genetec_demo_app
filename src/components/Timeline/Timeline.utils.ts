@@ -1,4 +1,4 @@
-import type { TimelineGroup } from './Timeline.types';
+import type { TimelineGroup, TimelineRow } from './Timeline.types';
 
 const dayKeyFormatter = new Intl.DateTimeFormat('en-CA', {
   year: 'numeric',
@@ -48,4 +48,18 @@ export const groupItemsByDay = <ItemType>(
   }
 
   return groups;
+};
+
+export const flattenGroups = <ItemType>(groups: TimelineGroup<ItemType>[]): TimelineRow<ItemType>[] => {
+  const rows: TimelineRow<ItemType>[] = [];
+
+  for (const group of groups) {
+    rows.push({ type: 'header', label: group.label });
+
+    for (const item of group.items) {
+      rows.push({ type: 'item', item });
+    }
+  }
+
+  return rows;
 };
