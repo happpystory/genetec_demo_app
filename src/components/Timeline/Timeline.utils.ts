@@ -1,11 +1,5 @@
 import type { TimelineGroup, TimelineRow } from './Timeline.types';
 
-const dayKeyFormatter = new Intl.DateTimeFormat('en-CA', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-});
-
 const dayLabelFormatter = new Intl.DateTimeFormat('en-GB', {
   weekday: 'long',
   day: 'numeric',
@@ -37,7 +31,7 @@ export const groupItemsByDay = <ItemType>(
 
   for (const item of sortedItems) {
     const date = new Date(getItemDate(item));
-    const dayKey = dayKeyFormatter.format(date);
+    const dayKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
     if (currentGroup === null || currentGroup.dayKey !== dayKey) {
       currentGroup = { dayKey, label: dayLabelFormatter.format(date), items: [] };
